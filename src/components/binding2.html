@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <title>D3: Loading Data</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+
+  <body>
+    <h1>Example: Loading data</h1>
+    <button onclick="funLoad()">Load Data</button>
+    <div id="canvas"></div>
+    <div style="background-color: rgb(14, 194, 161)">
+      Sample <strong>div</strong> area
+    </div>
+  </body>
+
+  <script>
+    function funLoad() {
+      d3.csv("country.csv").then(funDraw);
+    }
+    function funDraw(myData) {
+      console.log(myData);
+      var m = d3.max(myData, function (d) {
+        return +d.Population;
+      });
+      console.log(m);
+      var scale = d3.scaleLinear().domain([0, m]).range([0, 500]);
+      d3.select("#canvas")
+        .selectAll("div")
+        .data(myData)
+        .enter()
+        .append("div")
+        .transition()
+        .duration(1000)
+        .text(function (d) {
+          return d.Country;
+        })
+        .style("background-color", "blue")
+        .style("color", "white")
+        .style("margin", "5px")
+        .style("width", function (d) {
+          return scale(d.Population) + "px";
+        });
+    }
+  </script>
+</html>
